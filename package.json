@@ -11,6 +11,10 @@
     "url": "git://github.com/victorbalssa/homebridge-switchbot.git"
   },
   "main": "dist/index.js",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge"
+  ],
   "icon": "https://raw.githubusercontent.com/OpenWonderLabs/homebridge-switchbot/latest/branding/icon.png",
   "engineStrict": true,
   "engines": {
