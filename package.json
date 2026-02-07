@@ -1,56 +1,15 @@
 {
-  "name": "@switchbot/homebridge-switchbot",
+  "name": "@victorbalssa/homebridge-switchbot",
   "displayName": "SwitchBot",
   "type": "module",
   "version": "4.3.7",
   "description": "The SwitchBot plugin allows you to access your SwitchBot device(s) from HomeKit.",
-  "author": "SwitchBot <support@wondertechlabs.com> (https://github.com/SwitchBot)",
-  "contributors": [
-    {
-      "name": "Donavan Becker",
-      "url": "https://github.com/donavanbecker"
-    }
-  ],
   "license": "ISC",
-  "funding": [
-    {
-      "type": "Paypal",
-      "url": "https://paypal.me/donavanbecker"
-    },
-    {
-      "type": "GitHub",
-      "url": "https://github.com/sponsors/donavanbecker"
-    }
-  ],
-  "homepage": "https://github.com/OpenWonderLabs/homebridge-switchbot#readme",
+  "homepage": "https://github.com/victorbalssa/homebridge-switchbot#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/OpenWonderLabs/homebridge-switchbot.git"
+    "url": "git://github.com/victorbalssa/homebridge-switchbot.git"
   },
-  "bugs": {
-    "url": "https://github.com/OpenWonderLabs/homebridge-switchbot/issues"
-  },
-  "keywords": [
-    "homebridge-plugin",
-    "switchbot",
-    "lights",
-    "fan",
-    "outlet",
-    "hub",
-    "lightstrip",
-    "motion",
-    "contact",
-    "vacuum",
-    "lock",
-    "humidifier",
-    "humidity",
-    "temperature",
-    "bot",
-    "curtains",
-    "windows",
-    "ble",
-    "ir"
-  ],
   "main": "dist/index.js",
   "icon": "https://raw.githubusercontent.com/OpenWonderLabs/homebridge-switchbot/latest/branding/icon.png",
   "engineStrict": true,
