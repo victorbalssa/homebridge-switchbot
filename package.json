@@ -1,5 +1,5 @@
 {
-  "name": "@victorbalssa/homebridge-switchbot",
+  "name": "homebridge-switchbot-meterpro-co2",
   "displayName": "SwitchBot",
   "type": "module",
   "version": "5.0.2",
