@@ -2,7 +2,7 @@
   "name": "@victorbalssa/homebridge-switchbot",
   "displayName": "SwitchBot",
   "type": "module",
-  "version": "4.3.7",
+  "version": "5.0.0",
   "description": "The SwitchBot plugin allows you to access your SwitchBot device(s) from HomeKit.",
   "license": "ISC",
   "homepage": "https://github.com/victorbalssa/homebridge-switchbot#readme",
