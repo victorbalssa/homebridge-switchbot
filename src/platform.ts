@@ -314,12 +314,19 @@ export class SwitchBotPlatform implements DynamicPlatformPlugin {
           this.debugLog('Scanning for BLE SwitchBot devices...')
           try {
             await this.switchBotBLE.startScan()
+            this.debugLog('Platform BLE scan started successfully (unfiltered)')
           } catch (e: any) {
             this.errorLog(`Failed to start BLE scanning. Error: ${e.message ?? e}`)
           }
           // Set an event handler to monitor advertisement packets
           this.switchBotBLE.onadvertisement = async (ad: any) => {
             try {
+              this.debugLog(`Platform BLE advertisement received: address=${ad.address}, model=${ad.serviceData?.model}, modelName=${ad.serviceData?.modelName}`)
+              const hasHandler = !!this.bleEventHandler[ad.address]
+              this.debugLog(`Handler registered for ${ad.address}: ${hasHandler}`)
+              if (hasHandler) {
+                this.debugLog(`Dispatching to handler for ${ad.address}`)
+              }
               this.bleEventHandler[ad.address]?.(ad.serviceData)
             } catch (e: any) {
               this.errorLog(`Failed to handle BLE event. Error: ${e.message ?? e}`)

@@ -366,9 +366,15 @@ export class MeterPro extends deviceBase {
       (async () => {
         // Start to monitor advertisement packets
         const serviceData = await this.monitorAdvertisementPackets(switchBotBLE) as meterProServiceData | meterProCO2ServiceData
+        this.debugLog(`Returned serviceData: ${JSON.stringify(serviceData)}`)
+        this.debugLog(`Expected model: MeterPro=${SwitchBotBLEModel.MeterPro}, MeterProCO2=${SwitchBotBLEModel.MeterProCO2}`)
+        this.debugLog(`Expected modelName: MeterPro=${SwitchBotBLEModelName.MeterPro}, MeterProCO2=${SwitchBotBLEModelName.MeterProCO2}`)
+        this.debugLog(`Received model=${serviceData.model}, modelName=${serviceData.modelName}`)
+        this.debugLog(`Has celsius: ${serviceData.celsius !== undefined}, Has humidity: ${serviceData.humidity !== undefined}`)
         // Update HomeKit
         if ((serviceData.model === SwitchBotBLEModel.MeterPro && serviceData.modelName === SwitchBotBLEModelName.MeterPro)
           || (serviceData.model === SwitchBotBLEModel.MeterProCO2 && serviceData.modelName === SwitchBotBLEModelName.MeterProCO2)) {
+          this.debugLog('serviceData model/modelName matched, updating serviceData')
           this.serviceData = serviceData
           if (serviceData !== undefined || serviceData !== null) {
             await this.BLEparseStatus()
@@ -395,6 +401,8 @@ export class MeterPro extends deviceBase {
         this.debugLog(`bleMac: ${this.device.bleMac}`)
         this.platform.bleEventHandler[this.device.bleMac] = async (context: meterProServiceData) => {
           try {
+            this.debugLog(`Platform BLE handler triggered for ${this.device.bleMac}`)
+            this.debugLog(`received context: ${JSON.stringify(context)}`)
             this.serviceData = context
             if (context !== undefined || context !== null) {
               this.debugLog(`received BLE: ${JSON.stringify(context)}`)
@@ -408,6 +416,8 @@ export class MeterPro extends deviceBase {
             this.errorLog(`failed to handle BLE. Received: ${JSON.stringify(context)} Error: ${e.message ?? e}`)
           }
         }
+        this.debugLog(`Registered Platform BLE handler for MAC: ${this.device.bleMac}`)
+        this.debugLog(`Current registered handlers: ${Object.keys(this.platform.bleEventHandler).join(', ')}`)
       } catch (error) {
         this.errorLog(`failed to format device ID as MAC, Error: ${error}`)
       }

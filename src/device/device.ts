@@ -313,30 +313,50 @@ export abstract class deviceBase {
 
   async monitorAdvertisementPackets(switchbot: SwitchBotBLE): Promise<ad['serviceData']> {
     this.debugLog(`Scanning for deviceID: ${this.device.bleMac} Model: ${this.device.bleModel} ModelName: ${this.device.bleModelName}...`)
+    let advertisementCount = 0
+    let matchingAdvertisementCount = 0
     try {
+      this.debugLog(`Starting BLE scan with filter: model=${this.device.bleModel}, id=${this.device.bleMac}`)
       await switchbot.startScan({ model: this.device.bleModel, id: this.device.bleMac })
+      this.debugLog('BLE scan started successfully')
     } catch (e: any) {
       this.errorLog(`Failed to start BLE scanning. Error: ${e.message ?? e}`)
     }
     // Set an event handler
     let serviceData = { model: this.device.bleModel, modelName: this.device.bleModelName } as ad['serviceData']
+
     switchbot.onadvertisement = (ad: ad) => {
-      this.debugLog(`Received advertisement: ${safeStringify(ad)}`)
+      advertisementCount++
+      this.debugLog(`Received advertisement #${advertisementCount}: address=${ad.address}, model=${ad.serviceData?.model}, modelName=${ad.serviceData?.modelName}`)
+      this.debugLog(`Full advertisement: ${safeStringify(ad)}`)
+      this.debugLog(`Comparing: ad.address(${ad.address}) === bleMac(${this.device.bleMac}) = ${ad.address === this.device.bleMac}`)
+      this.debugLog(`Comparing: ad.serviceData.model(${ad.serviceData?.model}) === bleModel(${this.device.bleModel}) = ${ad.serviceData?.model === this.device.bleModel}`)
       if (ad.address === this.device.bleMac && ad.serviceData.model === this.device.bleModel) {
+        matchingAdvertisementCount++
+        this.debugLog(`MATCHED advertisement #${matchingAdvertisementCount}`)
         this.debugLog(`ad: ${safeStringify(ad)}`)
         this.debugLog(`${JSON.stringify(ad, null, '  ')}`)
         this.debugLog(`address: ${ad.address}, model: ${ad.serviceData.model}`)
         this.debugLog(`serviceData: ${JSON.stringify(ad.serviceData)}`)
         serviceData = ad.serviceData
+      } else {
+        this.debugLog(`NOT MATCHED: address match=${ad.address === this.device.bleMac}, model match=${ad.serviceData?.model === this.device.bleModel}`)
       }
     }
     // Wait
+    this.debugLog(`Waiting ${this.scanDuration} seconds for BLE advertisements...`)
     await switchbot.wait(this.scanDuration * 1000)
     // Stop to monitor
     try {
       await switchbot.stopScan()
+      this.debugLog(`BLE scan stopped. Total advertisements received: ${advertisementCount}, Matching: ${matchingAdvertisementCount}`)
     } catch (e: any) {
       this.errorLog(`Failed to stop BLE scanning. Error: ${e.message ?? e}`)
+    }
+    if (advertisementCount === 0) {
+      this.warnLog('No BLE advertisements received during scan. Check if BLE is working and device is in range.')
+    } else if (matchingAdvertisementCount === 0) {
+      this.warnLog(`Received ${advertisementCount} advertisements but none matched device. Check MAC address and model.`)
     }
     return serviceData
   }
